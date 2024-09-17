@@ -35,7 +35,7 @@ def separar_empresas_por_planilha(df, nome_coluna, caminho_pasta):
 
     # Iterando sobre cada empresa única
     for empresa in empresas_unicas:
-        # Filtrando o DataFrame apenas para a empresa atual
+        # Filtrando o DataFrame apenas para a empresa atua
         df_empresa = df[df[nome_coluna] == empresa]
 
         # Criando um nome de arquivo para a planilha
@@ -46,4 +46,4 @@ def separar_empresas_por_planilha(df, nome_coluna, caminho_pasta):
         print(f"Planilha para {empresa} salva em {nome_arquivo}")
 
 if __name__ == '__main__':
-   pass
+   pass 
