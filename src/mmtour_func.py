@@ -46,20 +46,4 @@ def separar_empresas_por_planilha(df, nome_coluna, caminho_pasta):
         print(f"Planilha para {empresa} salva em {nome_arquivo}")
 
 if __name__ == '__main__':
-    # Exemplo de uso:
-    url = "./dados/03_MAR.xls"
-    caminho_empresas = r"D:\Projetos_Programação\mmtour\empresas"
-    caminho_motoristas = r"D:\Projetos_Programação\mmtour\motoristas"
-    df_unificado = juntar_planilhas(url)
-
-    tratar_empresas = separar_empresas_por_planilha(
-        df_unificado, "Empresa", caminho_empresas
-    )
-    tratar_motoristas = separar_empresas_por_planilha(
-        df_unificado, "Motorista", caminho_motoristas
-    )
-
-    
-    # Exibir o DataFrame unificado
-    print(tratar_empresas)
-    print(tratar_motoristas)
+   pass
