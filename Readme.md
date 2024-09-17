@@ -15,7 +15,12 @@ Para começar a usar, siga estes passos:
    ```bash
    poetry init
    ```
-4. **Rode a aplicação**:
+4. **Crie 2 pastas empresas e motorista**:
+   ```bash
+   mkdir empresa
+   mkdir motorista
+   ```
+5. **Rode a aplicação**:
    ```bash
    poetry run pyhton src/app.py
    ```   
