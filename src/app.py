@@ -1,8 +1,8 @@
 from mmtour_func import juntar_planilhas, separar_empresas_por_planilha
 #exemplo
 url = "./dados/03_MAR.xls"
-caminho_empresas = r"D:\Projetos_Programação\mmtour\empresas"
-caminho_motoristas = r"D:\Projetos_Programação\mmtour\motoristas"
+caminho_empresas = r"C:\Users\mairon.costa\OneDrive - Expertise Inteligência e Pesquisa de Mercado\expertise_mairon\2024\meus projetos\mmtour_pl\empresa"
+caminho_motoristas = r"C:\Users\mairon.costa\OneDrive - Expertise Inteligência e Pesquisa de Mercado\expertise_mairon\2024\meus projetos\mmtour_pl\motorista"
 df_unificado = juntar_planilhas(url)
 
 tratar_empresas = separar_empresas_por_planilha(

@@ -45,5 +45,48 @@ def separar_empresas_por_planilha(df, nome_coluna, caminho_pasta):
         df_empresa.to_excel(nome_arquivo, index=False)
         print(f"Planilha para {empresa} salva em {nome_arquivo}")
 
+def existe_rota(arquivo_rotas_internato,arquivo_extraido_do_mes):
+    arquivo_mensal = pd.read_excel(arquivo_extraido_do_mes)
+    rotas_internato = pd.ExcelFile(arquivo_rotas_internato)
+
+    #pegando numeros unicos das rotas para comparar com o sheetname de cada planilha da rota_internato
+    passageiro_lista = arquivo_mensal['Passageiro'].str.extract('(\d+)', expand=False).tolist()
+    passageiro_lista = list((dict.fromkeys(passageiro_lista)))
+
+    for i, nome in enumerate(passageiro_lista):
+        # Exemplo de condição para renomear
+        if "02" in nome:
+            passageiro_lista[i] = nome.replace("02", "Emanuel")
+        elif "03" in nome:
+            passageiro_lista[i] = nome.replace("03", "Max")
+        elif "04" in nome:
+            passageiro_lista[i] = nome.replace("04", "Gabriel")
+        elif "06" in nome:
+            passageiro_lista[i] = nome.replace("06", "Shirlei")    
+        elif "09" in nome:
+            passageiro_lista[i] = nome.replace("09", "Gustavo")
+        elif "10" in nome:
+            passageiro_lista[i] = nome.replace("10", "Ana Maria")
+        elif "13" in nome:
+            passageiro_lista[i] = nome.replace("13", "Edna")    
+
+    planilhas_rotas = {}
+
+    for nome in passageiro_lista:
+        if nome in rotas_internato.sheet_names:  # Verifica se o nome existe como planilha
+            # Lê a planilha e armazena no dicionário
+            planilhas_rotas[nome] = pd.read_excel(rotas_internato, sheet_name=nome)
+            print(f"Planilha {nome} carregada com sucesso!")
+            
+        else:
+             print(f"A planilha {nome} não existe no arquivo.")
+    
+    print(planilhas_rotas)
+    
+
 if __name__ == '__main__':
-   pass 
+  url = "./empresa/Internato.xlsx"
+  rotas_internato = r'D:\Rotas Professores Internato.xlsx'
+
+
+  print(existe_rota(rotas_internato,url))
