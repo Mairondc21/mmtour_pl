@@ -45,7 +45,28 @@ def separar_empresas_por_planilha(df, nome_coluna, caminho_pasta):
         df_empresa.to_excel(nome_arquivo, index=False)
         print(f"Planilha para {empresa} salva em {nome_arquivo}")
 
+
+def compara_rota_internato(url,nome_pasta, descricao_cidades):
+    arquivo = pd.read_excel(url,sheet_name=nome_pasta, header=3)
+    arquivo = arquivo[["Destino"]]
+
+    cidades_parametro = set(descricao_cidades.split('>'))
+    
+    for index, row in arquivo.iterrows():
+        if row.isnull().any():
+            print(f"Valor nulo encontrado na linha {index + 5}. Encerrando a função.")
+            return
+        # Transforma as cidades do DataFrame em um conjunto
+        cidades_df = set(row["Destino"].split('>'))
+
+        # Verifica se todas as cidades do parâmetro estão contidas nas cidades da linha
+        if cidades_parametro == cidades_df:
+            print(f"As cidades {cidades_parametro} estão contidas na linha {index + 5}: {row["Destino"]}")
+    
+    return cidades_df
+
 def existe_rota(arquivo_rotas_internato,arquivo_extraido_do_mes):
+    rotas_internato = r'E:\Rotas Professores Internato.xlsx'
     arquivo_mensal = pd.read_excel(arquivo_extraido_do_mes)
     rotas_internato = pd.ExcelFile(arquivo_rotas_internato)
 
@@ -70,7 +91,22 @@ def existe_rota(arquivo_rotas_internato,arquivo_extraido_do_mes):
         elif "13" in nome:
             passageiro_lista[i] = nome.replace("13", "Edna")    
 
-    planilhas_rotas = {}
+    arquivo_destino = arquivo_mensal['Destino']
+
+    for nome in passageiro_lista:
+        encontrou_rota = False
+        for destino in arquivo_destino:
+            if compara_rota_internato(rotas_internato, nome, destino):
+                encontrou_rota = True
+                break  # Interrompe o loop interno assim que a condição é satisfeita
+        
+    if encontrou_rota:
+        continue
+
+    return print()
+
+
+    """ planilhas_rotas = {}
 
     for nome in passageiro_lista:
         if nome in rotas_internato.sheet_names:  # Verifica se o nome existe como planilha
@@ -81,12 +117,12 @@ def existe_rota(arquivo_rotas_internato,arquivo_extraido_do_mes):
         else:
              print(f"A planilha {nome} não existe no arquivo.")
     
-    print(planilhas_rotas)
-    
+    print(planilhas_rotas) """
 
 if __name__ == '__main__':
-  url = "./empresa/Internato.xlsx"
-  rotas_internato = r'D:\Rotas Professores Internato.xlsx'
 
+    rotas_internato = r'E:\Rotas Professores Internato.xlsx'
+    arquivo_mensal_internato = './empresa/Internato.xlsx'
 
-  print(existe_rota(rotas_internato,url))
+    print(existe_rota(rotas_internato,arquivo_mensal_internato))
+    #print(compara_rota_internato(rotas_internato,'Lidia','Divinópolis>São Franscisco de Paula> Boa Esperança>Cristais'))
