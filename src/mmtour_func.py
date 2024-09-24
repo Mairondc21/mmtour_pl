@@ -50,107 +50,111 @@ def compara_rota_internato(url,nome_pasta, descricao_cidades):
     arquivo = pd.read_excel(url,sheet_name=nome_pasta, header=3)
     arquivo = arquivo[["Destino"]]
 
-<<<<<<< HEAD
-    cidades_parametro = list(descricao_cidades.split('>'))
+    cidades_parametro = set(descricao_cidades.split('>'))
 
     for index, row in arquivo.iterrows():
         if row.isnull().any():
             print(f"Na pasta {nome_pasta} valor nulo encontrado na linha {index + 5}. Encerrando a função.")
             return 
         # Transforma as cidades do DataFrame em um conjunto
-        cidades_df = list(row["Destino"].split('>'))
+        cidades_df = set(row["Destino"].split('>'))
 
         # Verifica se todas as cidades do parâmetro estão contidas nas cidades da linha
         if cidades_parametro == cidades_df:
             print(f'Na pasta {nome_pasta} está contida na linha {index + 5}')
     
-    return print(f'TESTE {cidades_parametro}')
-=======
-    cidades_parametro = set(descricao_cidades.split('>'))
-    
-    for index, row in arquivo.iterrows():
-        if row.isnull().any():
-            print(f"Valor nulo encontrado na linha {index + 5}. Encerrando a função.")
-            return
-        # Transforma as cidades do DataFrame em um conjunto
-        cidades_df = set(row["Destino"].split('>'))
-
-        # Verifica se todas as cidades do parâmetro estão contidas nas cidades da linha
-        if cidades_parametro == cidades_df:
-            print(f"As cidades {cidades_parametro} estão contidas na linha {index + 5}: {row["Destino"]}")
-    
-    return cidades_df
->>>>>>> 2994ced87316e6b75912acea70a89c010e537d10
+    return index + 5
 
 def existe_rota(arquivo_rotas_internato,arquivo_extraido_do_mes):
-    rotas_internato = r'E:\Rotas Professores Internato.xlsx'
     arquivo_mensal = pd.read_excel(arquivo_extraido_do_mes)
-    rotas_internato = pd.ExcelFile(arquivo_rotas_internato)
+    
+    df_novo = arquivo_mensal[['Passageiro','Destino']]
+    print(df_novo)
 
     #pegando numeros unicos das rotas para comparar com o sheetname de cada planilha da rota_internato
-    passageiro_lista = arquivo_mensal['Passageiro'].str.extract('(\d+)', expand=False).tolist()
+    df_novo['Passageiro_tratado'] = df_novo['Passageiro'].str.extract('(\d+)', expand=False)
     #passageiro_lista = list((dict.fromkeys(passageiro_lista)))
+    print(df_novo[['Passageiro_tratado','Destino']])
 
-    for i, nome in enumerate(passageiro_lista):
+    passageiro_lista = df_novo['Passageiro_tratado'].tolist()  # Convertendo a coluna 'Passageiro_tratado' para lista
+    destino_lista = df_novo['Destino'].tolist()  # Convertendo a coluna 'Destino' para lista
+
+    # Criando novas listas para armazenar os valores não repetidos consecutivamente
+    nova_passageiro_lista = [passageiro_lista[0]]
+    nova_destino_lista = [destino_lista[0]]
+
+    # Percorrendo a lista de 'Passageiro_tratado' e 'Destino' e aplicando a condição
+    for i in range(1, len(passageiro_lista)):
+        if passageiro_lista[i] != passageiro_lista[i - 1]:  # Comparando passageiro com o anterior
+            nova_passageiro_lista.append(passageiro_lista[i])
+            nova_destino_lista.append(destino_lista[i])
+
+    # Criando um novo DataFrame com os valores únicos de Passageiro_tratado e Destino
+    
+
+    
+
+    for i, nome in enumerate(nova_passageiro_lista):
         # Exemplo de condição para renomear
         if "02" in nome:
-            passageiro_lista[i] = nome.replace("02", "Emanuel")
+            nova_passageiro_lista[i] = nome.replace("02", "Emanuel")
         elif "03" in nome:
-            passageiro_lista[i] = nome.replace("03", "Max")
+            nova_passageiro_lista[i] = nome.replace("03", "Max")
         elif "04" in nome:
-            passageiro_lista[i] = nome.replace("04", "Gabriel")
+            nova_passageiro_lista[i] = nome.replace("04", "Gabriel")
         elif "06" in nome:
-            passageiro_lista[i] = nome.replace("06", "Shirlei")    
+            nova_passageiro_lista[i] = nome.replace("06", "Shirlei")    
         elif "09" in nome:
-            passageiro_lista[i] = nome.replace("09", "Gustavo")
+            nova_passageiro_lista[i] = nome.replace("09", "Gustavo")
         elif "10" in nome:
-            passageiro_lista[i] = nome.replace("10", "Ana Maria")
+            nova_passageiro_lista[i] = nome.replace("10", "Ana Maria")
         elif "13" in nome:
-            passageiro_lista[i] = nome.replace("13", "Edna")    
+            nova_passageiro_lista[i] = nome.replace("13", "Edna")    
 
-    arquivo_destino = arquivo_mensal['Destino']
-<<<<<<< HEAD
-=======
-
-    for nome in passageiro_lista:
-        encontrou_rota = False
-        for destino in arquivo_destino:
-            if compara_rota_internato(rotas_internato, nome, destino):
-                encontrou_rota = True
-                break  # Interrompe o loop interno assim que a condição é satisfeita
-        
-    if encontrou_rota:
-        continue
-
-    return print()
-
-
-    """ planilhas_rotas = {}
->>>>>>> 2994ced87316e6b75912acea70a89c010e537d10
-
-    pares_unicos = set()
+   
+    pares_unicos = []
     pares_pernoite = []
-    index = 2
+    index_planilha_mensal = 2
+    index_planilha_internato = None
     
-    par_anterior = [None,None]
+    par_anterior = [None,None,None,None]
     
    
-    for nome, destino in zip(passageiro_lista, arquivo_destino):
-        par_atual = (nome, destino, index)
-        
-       
-        if par_atual == par_anterior or par_atual[1] == par_anterior[1]:
-            pares_pernoite.append(par_atual)
-            index += 1
-        
-        elif par_atual not in pares_unicos:
-            pares_unicos.add(par_atual)
-            compara_rota_internato(rotas_internato, nome, destino)
-            index += 1
-        
+    for nome, destino in zip(nova_passageiro_lista, nova_destino_lista):
+        par_atual = (nome, destino, index_planilha_mensal,index_planilha_internato)
+        par_anterior
+        if par_atual not in pares_unicos:
+            
+            arquivo = pd.read_excel(arquivo_rotas_internato,sheet_name=nome, header=3)
+            arquivo = arquivo[["Destino"]]
+
+            cidades_df_anterior = None 
+            cidades_parametro = set(destino.split('>'))
+
+            for index_planilha_internato, row in arquivo.iterrows():
+                if row.isnull().any():
+                    print(f"Na pasta {nome} valor nulo encontrado na linha {index_planilha_internato + 5}. Encerrando a função.")
+                    break  # sai do loop atual e passa para o próximo item na lista `zip(passageiro_lista, arquivo_destino)`
+                
+                 
+                cidades_df = set(row["Destino"].split('>'))
+
+                if cidades_parametro == cidades_df:
+                    print(f'Na pasta {nome} a rota está contida na linha {index_planilha_internato + 5}')
+                    # Verifica se todas as cidades do parâmetro estão contidas nas cidades da linha
+                    if cidades_df == cidades_df_anterior:
+                        pares_pernoite.append([nome,destino, index_planilha_mensal + 1,index_planilha_internato + 5])
+                    else:
+                        pares_unicos.append([nome,destino, index_planilha_mensal + 1,index_planilha_internato + 5])
+                    
+                    # Atualiza cidades_df_anterior para ser a atual cidades_df
+                    cidades_df_anterior = cidades_df   
+            index_planilha_mensal += 1
+            
         par_anterior = par_atual
-    
-    return print(f'pares unicos:{list(pares_unicos)[2]}, PARES PERNOITE{pares_pernoite[2]} no index {0}')
+
+    return print(f'\n\nLINHAS JA CONTIDAS = {pares_unicos} \n\nPERNOITES = {pares_pernoite} ')
+
 
     """ planilhas_rotas = {}
     for nome in passageiro_lista:
@@ -166,12 +170,8 @@ def existe_rota(arquivo_rotas_internato,arquivo_extraido_do_mes):
 
 if __name__ == '__main__':
 
-<<<<<<< HEAD
     rotas_internato = r'D:\Rotas Professores Internato.xlsx'
-=======
-    rotas_internato = r'E:\Rotas Professores Internato.xlsx'
->>>>>>> 2994ced87316e6b75912acea70a89c010e537d10
     arquivo_mensal_internato = './empresa/Internato.xlsx'
-
+    #ordem 1ª nome da pasts, 2ªdestino, 3ª index da planilha mensal, 4ª index da planilha rotas_internato
     print(existe_rota(rotas_internato,arquivo_mensal_internato))
     #print(compara_rota_internato(rotas_internato,'Lidia','Divinópolis>São Franscisco de Paula> Boa Esperança>Cristais'))
