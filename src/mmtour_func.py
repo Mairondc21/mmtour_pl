@@ -50,6 +50,7 @@ def compara_rota_internato(url,nome_pasta, descricao_cidades):
     arquivo = pd.read_excel(url,sheet_name=nome_pasta, header=3)
     arquivo = arquivo[["Destino"]]
 
+<<<<<<< HEAD
     cidades_parametro = list(descricao_cidades.split('>'))
 
     for index, row in arquivo.iterrows():
@@ -64,6 +65,22 @@ def compara_rota_internato(url,nome_pasta, descricao_cidades):
             print(f'Na pasta {nome_pasta} está contida na linha {index + 5}')
     
     return print(f'TESTE {cidades_parametro}')
+=======
+    cidades_parametro = set(descricao_cidades.split('>'))
+    
+    for index, row in arquivo.iterrows():
+        if row.isnull().any():
+            print(f"Valor nulo encontrado na linha {index + 5}. Encerrando a função.")
+            return
+        # Transforma as cidades do DataFrame em um conjunto
+        cidades_df = set(row["Destino"].split('>'))
+
+        # Verifica se todas as cidades do parâmetro estão contidas nas cidades da linha
+        if cidades_parametro == cidades_df:
+            print(f"As cidades {cidades_parametro} estão contidas na linha {index + 5}: {row["Destino"]}")
+    
+    return cidades_df
+>>>>>>> 2994ced87316e6b75912acea70a89c010e537d10
 
 def existe_rota(arquivo_rotas_internato,arquivo_extraido_do_mes):
     rotas_internato = r'E:\Rotas Professores Internato.xlsx'
@@ -92,6 +109,24 @@ def existe_rota(arquivo_rotas_internato,arquivo_extraido_do_mes):
             passageiro_lista[i] = nome.replace("13", "Edna")    
 
     arquivo_destino = arquivo_mensal['Destino']
+<<<<<<< HEAD
+=======
+
+    for nome in passageiro_lista:
+        encontrou_rota = False
+        for destino in arquivo_destino:
+            if compara_rota_internato(rotas_internato, nome, destino):
+                encontrou_rota = True
+                break  # Interrompe o loop interno assim que a condição é satisfeita
+        
+    if encontrou_rota:
+        continue
+
+    return print()
+
+
+    """ planilhas_rotas = {}
+>>>>>>> 2994ced87316e6b75912acea70a89c010e537d10
 
     pares_unicos = set()
     pares_pernoite = []
@@ -131,7 +166,11 @@ def existe_rota(arquivo_rotas_internato,arquivo_extraido_do_mes):
 
 if __name__ == '__main__':
 
+<<<<<<< HEAD
     rotas_internato = r'D:\Rotas Professores Internato.xlsx'
+=======
+    rotas_internato = r'E:\Rotas Professores Internato.xlsx'
+>>>>>>> 2994ced87316e6b75912acea70a89c010e537d10
     arquivo_mensal_internato = './empresa/Internato.xlsx'
 
     print(existe_rota(rotas_internato,arquivo_mensal_internato))

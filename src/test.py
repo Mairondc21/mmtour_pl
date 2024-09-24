@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import pandas as pd
 
 
@@ -135,3 +136,18 @@ if __name__ == '__main__':
 
     print(existe_rota(rotas_internato,arquivo_mensal_internato))
     #print(compara_rota_internato(rotas_internato,'Lidia','Divinópolis>São Franscisco de Paula> Boa Esperança>Cristais'))
+=======
+from mmtour_func import juntar_planilhas,separar_empresas_por_planilha
+from app import caminho_empresas
+
+
+
+if __name__ == "__main__":
+    url = "./dados/03_MAR.xls"
+    df_unificado = juntar_planilhas(url)
+
+
+    tratar_empresas = separar_empresas_por_planilha(
+    df_unificado, "Empresa", caminho_empresas
+)
+>>>>>>> 2994ced87316e6b75912acea70a89c010e537d10
