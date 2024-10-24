@@ -12,7 +12,7 @@ def juntar_planilhas(excel_file):
     for sheet_name in xls.sheet_names:
         df = pd.read_excel(xls, sheet_name=sheet_name, header=1, usecols="B:I")
         df["Data"] = sheet_name  # Adicionar o nome da planilha em uma nova coluna
-        df["Data"] = df["Data"].astype(str) + "/3"
+        df["Data"] = df["Data"].astype(str) + "/9"
         df = df.dropna(subset=["Passageiro"])
 
         mover_data = df.pop("Data")
@@ -69,12 +69,11 @@ def existe_rota(arquivo_rotas_internato,arquivo_extraido_do_mes):
     arquivo_mensal = pd.read_excel(arquivo_extraido_do_mes)
     
     df_novo = arquivo_mensal[['Passageiro','Destino']]
-    print(df_novo)
 
     #pegando numeros unicos das rotas para comparar com o sheetname de cada planilha da rota_internato
     df_novo['Passageiro_tratado'] = df_novo['Passageiro'].str.extract('(\d+)', expand=False)
     #passageiro_lista = list((dict.fromkeys(passageiro_lista)))
-    print(df_novo[['Passageiro_tratado','Destino']])
+    df_novo[['Passageiro_tratado','Destino']]
 
     passageiro_lista = df_novo['Passageiro_tratado'].tolist()  # Convertendo a coluna 'Passageiro_tratado' para lista
     destino_lista = df_novo['Destino'].tolist()  # Convertendo a coluna 'Destino' para lista
@@ -89,19 +88,14 @@ def existe_rota(arquivo_rotas_internato,arquivo_extraido_do_mes):
             nova_passageiro_lista.append(passageiro_lista[i])
             nova_destino_lista.append(destino_lista[i])
 
-    # Criando um novo DataFrame com os valores únicos de Passageiro_tratado e Destino
-    
-
-    
-
     for i, nome in enumerate(nova_passageiro_lista):
         # Exemplo de condição para renomear
         if "02" in nome:
             nova_passageiro_lista[i] = nome.replace("02", "Emanuel")
         elif "03" in nome:
             nova_passageiro_lista[i] = nome.replace("03", "Max")
-        elif "04" in nome:
-            nova_passageiro_lista[i] = nome.replace("04", "Gabriel")
+        elif "04" in nome: 
+            nova_passageiro_lista[i] = nome.replace("04", "Guilherme")
         elif "06" in nome:
             nova_passageiro_lista[i] = nome.replace("06", "Shirlei")    
         elif "09" in nome:
@@ -109,12 +103,17 @@ def existe_rota(arquivo_rotas_internato,arquivo_extraido_do_mes):
         elif "10" in nome:
             nova_passageiro_lista[i] = nome.replace("10", "Ana Maria")
         elif "13" in nome:
-            nova_passageiro_lista[i] = nome.replace("13", "Edna")    
+            nova_passageiro_lista[i] = nome.replace("13", "Edna")
+        elif "18" in nome:
+            nova_passageiro_lista[i] = nome.replace("18", "Horacio")
+        elif "28" in nome:
+            nova_passageiro_lista[i] = nome.replace("28", "Humberto")          
 
    
-    pares_unicos = []
+    pares_contidos = []
+    pares_nao_contidos = []
     pares_pernoite = []
-    index_planilha_mensal = 2
+    index_planilha_mensal = 1
     index_planilha_internato = None
     
     par_anterior = [None,None,None,None]
@@ -123,7 +122,7 @@ def existe_rota(arquivo_rotas_internato,arquivo_extraido_do_mes):
     for nome, destino in zip(nova_passageiro_lista, nova_destino_lista):
         par_atual = (nome, destino, index_planilha_mensal,index_planilha_internato)
         par_anterior
-        if par_atual not in pares_unicos:
+        if par_atual not in pares_contidos:
             
             arquivo = pd.read_excel(arquivo_rotas_internato,sheet_name=nome, header=3)
             arquivo = arquivo[["Destino"]]
@@ -145,15 +144,15 @@ def existe_rota(arquivo_rotas_internato,arquivo_extraido_do_mes):
                     if cidades_df == cidades_df_anterior:
                         pares_pernoite.append([nome,destino, index_planilha_mensal + 1,index_planilha_internato + 5])
                     else:
-                        pares_unicos.append([nome,destino, index_planilha_mensal + 1,index_planilha_internato + 5])
-                    
-                    # Atualiza cidades_df_anterior para ser a atual cidades_df
+                        pares_contidos.append([nome,destino, index_planilha_mensal + 1,index_planilha_internato + 5])
+                # Atualiza cidades_df_anterior para ser a atual cidades_df
                     cidades_df_anterior = cidades_df   
-            index_planilha_mensal += 1
+    
+            index_planilha_mensal += 1        
             
         par_anterior = par_atual
 
-    return print(f'\n\nLINHAS JA CONTIDAS = {pares_unicos} \n\nPERNOITES = {pares_pernoite} ')
+    return print(f'\n\nLINHAS JA CONTIDAS = {pares_contidos} \n\nPERNOITES = {pares_pernoite}')
 
 
     """ planilhas_rotas = {}
@@ -173,5 +172,6 @@ if __name__ == '__main__':
     rotas_internato = r'D:\Rotas Professores Internato.xlsx'
     arquivo_mensal_internato = './empresa/Internato.xlsx'
     #ordem 1ª nome da pasts, 2ªdestino, 3ª index da planilha mensal, 4ª index da planilha rotas_internato
-    print(existe_rota(rotas_internato,arquivo_mensal_internato))
-    #print(compara_rota_internato(rotas_internato,'Lidia','Divinópolis>São Franscisco de Paula> Boa Esperança>Cristais'))
+    #print(existe_rota(rotas_internato,arquivo_mensal_internato))
+    #print(compara_rota_internato(rotas_internato,'Humberto','Igaratinga>Divinópolis>Bom Despacho>Araújos>Perdigão>Pompéu>Martinho Campos'))
+
